@@ -56,9 +56,9 @@ func main() {
 	config := models.Config{
 		Source_data:      map[string]interface{}{},
 		Translated_file:  map[string]interface{}{},
-		Source_lang:      "autodetect",
-		Target_lang:      "fr",
-		Source_file_path: "../en.json",
+		Source_lang:      source_lang,
+		Target_lang:      target_lang,
+		Source_file_path: source_file,
 		Api_endpoint:     ini.Section("").Key("DEEPL_API_ENDPOINT").String(),
 		Api_key:          ini.Section("").Key("DEEPL_API_KEY").String(),
 		State:            make(chan models.State),
