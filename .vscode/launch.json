@@ -1,0 +1,18 @@
+{
+    // Use this to use the golang debugger in case something goes very wrong
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch go-json-translate",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "src",
+            "args": [
+                "-source_file=../en.json",
+                "-source_lang=fr",
+                "-target_lang=en",
+            ]
+        }
+    ]
+}
