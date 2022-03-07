@@ -12,8 +12,10 @@
 This tool was made to easily translate json translations files. Front-end frameworks and CMS  don't always provide a lot of translations, or any translations in some cases. This is totally understandable, but it's a major problem when you need to translate a 1000+ lines json language file. This tool can do that!
 </p>
 <p align="center">
+[![GitHub issues](https://img.shields.io/github/issues/gmonarque/go-json-translate)](https://github.com/gmonarque/go-json-translate/issues)
+[![GitHub license](https://img.shields.io/github/license/gmonarque/go-json-translate)](https://github.com/gmonarque/go-json-translate/blob/main/LICENSE)
 	<strong>
-		<a href="https://gmsec.fr/">Website</a>
+		<a href="https://gmsec.fr/">Personal website</a>
 	</strong>
 </p>
 <p align="center">
@@ -74,7 +76,7 @@ French translation generated with go-json-translate
 - Supports **nested json files**, without any limit
 - Uses a local database as a **translations cache** in order to increase speed and not to request twice the same translations from deepL. This means that once you've translated a file, you can translate it again with the same parameters and not query deepL at all.
 - Supports **variables** in the translated text. For example, `hello, {name}` won't be translated to `bonjour, {prénom}` but to `bonjour, {name}`
-Available enclusure tags are: `{}, #{} and []`. It's very easy to add new ones.
+Available enclosure tags are: `{}, #{} and []`. It's very easy to add new ones.
 
 
 #### This tool uses [DeepL free API](https://www.deepl.com/pro#developer). Their free plan includes:
@@ -123,7 +125,7 @@ List of languages available at github.com/gmonarque/go-json-translate
   -target_lang string
         Language the file will be translated in
 ```
-### Contribute && issues
+### Contribute & issues
 Don't hesitate to contribute to this project in any way you want. Just use gofmt and feel my vibe.
 If you have any issues with this, please open an issue, I'll happily respond.
 
