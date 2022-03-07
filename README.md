@@ -6,7 +6,7 @@
 </h1>
 
 <h3 align="center">
-	Translate json language files on the spot!
+	Translate json language files / i18n locales on the spot!
 </h3>
 <p align="center">
 This tool was made to easily translate json translations files. Front-end frameworks and CMS  don't always provide a lot of translations, or any translations in some cases. This is totally understandable, but it's a major problem when you need to translate a 1000+ lines json language file. This tool can do that!
