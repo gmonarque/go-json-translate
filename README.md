@@ -12,11 +12,13 @@
 This tool was made to easily translate json translations files. Front-end frameworks and CMS  don't always provide a lot of translations, or any translations in some cases. This is totally understandable, but it's a major problem when you need to translate a 1000+ lines json language file. This tool can do that!
 </p>
 <p align="center">
+	
 [![GitHub issues](https://img.shields.io/github/issues/gmonarque/go-json-translate)](https://github.com/gmonarque/go-json-translate/issues)
 [![GitHub license](https://img.shields.io/github/license/gmonarque/go-json-translate)](https://github.com/gmonarque/go-json-translate/blob/main/LICENSE)
-	<strong>
-		<a href="https://gmsec.fr/">Personal website</a>
-	</strong>
+
+<strong>
+	<a href="https://gmsec.fr/">Personnal website</a>
+</strong>
 </p>
 <p align="center">
 </p>
