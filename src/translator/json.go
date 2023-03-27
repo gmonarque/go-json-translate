@@ -47,6 +47,13 @@ func TranslateJson(config models.Config) (map[string]interface{}, error) {
 		//Once we have the value, we need to check its type because we don't know it yet
 		//In order to do that, we call .(type) on the value and we switch over the type
 		key := keys[i].Interface().(string)
+
+		// Ignore keys with "type" and "tabTitle"
+		if key == "type" || key == "tabTitle" || key == "languages" {
+			config.Translated_file[key] = config.Source_data[key]
+			continue
+		}
+
 		switch elem := config.Source_data[key].(type) {
 
 		//If the value is also a map[string]interface{}, this means our json source file is nested
@@ -120,12 +127,6 @@ func TranslateJson(config models.Config) (map[string]interface{}, error) {
 			}
 		//If we reach a string, we translate it using deepL
 		case string:
-			// Ignore keys with "type" and "tabTitle"
-			if key == "type" || key == "tabTitle" {
-				config.Translated_file[key] = elem
-				continue
-			}
-
 			res, err := Translate(elem, config)
 			if err != nil {
 				log.Println(err.Error())
