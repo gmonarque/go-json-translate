@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/ini.v1"
 	"gorm.io/gorm"
@@ -24,10 +25,12 @@ func main() {
 	var source_lang string
 	var target_lang string
 	var source_path string
+	var ignored_fields string
 
 	flag.StringVar(&source_lang, "source_lang", "autodetect", "Current language of the file. Use \"autodetect\" to let deepL guess the language.")
 	flag.StringVar(&target_lang, "target_lang", "", "Language the file will be translated in")
 	flag.StringVar(&source_path, "source_path", "", "Path of the source file(s)")
+	flag.StringVar(&ignored_fields, "ignored_fields", "", "Ignored fields separated by semicolon")
 	flag.Parse()
 
 	if source_lang == "" || target_lang == "" || source_path == "" {
@@ -80,6 +83,7 @@ func main() {
 		config := models.Config{
 			Source_data:      map[string]interface{}{},
 			Translated_file:  map[string]interface{}{},
+			Ignored_fields:   strings.Split(ignored_fields, ";"),
 			Source_lang:      source_lang,
 			Target_lang:      target_lang,
 			Source_file_path: file,

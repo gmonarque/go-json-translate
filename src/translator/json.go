@@ -48,9 +48,17 @@ func TranslateJson(config models.Config) (map[string]interface{}, error) {
 		//In order to do that, we call .(type) on the value and we switch over the type
 		key := keys[i].Interface().(string)
 
-		// Ignore keys with "type" and "tabTitle"
-		if key == "type" || key == "tabTitle" || key == "languages" {
-			config.Translated_file[key] = config.Source_data[key]
+		// Ignore keys specified in CLI parameters
+		ignored := false
+		for _, ignored_key := range config.Ignored_fields {
+			if key == ignored_key {
+				config.Translated_file[key] = config.Source_data[key]
+				ignored = true
+				break
+			}
+		}
+
+		if ignored {
 			continue
 		}
 
