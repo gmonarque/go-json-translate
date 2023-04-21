@@ -23,14 +23,15 @@ func main() {
 	//Checking CLI parameters
 	var source_lang string
 	var target_lang string
-	var source_folder string
+	var source_path string
+
 	flag.StringVar(&source_lang, "source_lang", "autodetect", "Current language of the file. Use \"autodetect\" to let deepL guess the language.")
 	flag.StringVar(&target_lang, "target_lang", "", "Language the file will be translated in")
-	flag.StringVar(&source_folder, "source_folder", "", "Path of the source folder")
+	flag.StringVar(&source_path, "source_path", "", "Path of the source file(s)")
 	flag.Parse()
 
-	if source_lang == "" || target_lang == "" || source_folder == "" {
-		fmt.Println("Usage example: go run main.go -source_folder=folder/ -source_lang=fr -target_lang=en")
+	if source_lang == "" || target_lang == "" || source_path == "" {
+		fmt.Println("Usage example: go run main.go -source_path=folder/*.json -source_lang=fr -target_lang=en")
 		fmt.Println("List of languages available at github.com/gmonarque/go-json-translate")
 		flag.PrintDefaults()
 		os.Exit(1)
@@ -52,8 +53,8 @@ func main() {
 
 	DB.AutoMigrate(&models.Translation{})
 
-	//Getting list of JSON files in the source folder
-	files, err := filepath.Glob(filepath.Join(source_folder, "*.json"))
+	//Getting list of JSON files in the source path
+	files, err := filepath.Glob(source_path)
 	if err != nil {
 		log.Fatal(err)
 	}
