@@ -12,12 +12,14 @@ import (
 	"github.com/google/go-querystring/query"
 )
 
-//If your json file contains variables between delimiters, they certainly don't need to be translated
-//You can define below the opening and closing delimiters, and the text between those won't be translated
+// If your json file contains variables between delimiters, they certainly don't need to be translated
+// You can define below the opening and closing delimiters, and the text between those won't be translated
 var delimiters = [][]string{
 	{"{", "}"},
 	{"#{", "}"},
 	{"[", "]"},
+	{"<", ">"},
+	{"<", "/>"},
 }
 
 func Translate(source_text string, config models.Config) (models.Translation, error) {

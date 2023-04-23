@@ -36,6 +36,7 @@ type State struct {
 type Config struct {
 	Source_data      map[string]interface{}
 	Translated_file  map[string]interface{}
+	Ignored_fields   []string
 	Source_lang      string
 	Target_lang      string
 	Source_file_path string
