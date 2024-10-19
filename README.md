@@ -97,35 +97,50 @@ Ok, so 500,000 / 6.5 = 76923. We could estimate that we can translate 70k words 
 - There is no support yet for json arrays, the only supported types are strings, numbers and booleans
 - The json source file is entirely read before translation. This means that if you have a **really** huge file to translate, there may be some instability depending on your hardware. But don't worry, thanks to the local translation cache, everything translated with DeepL won't be translated twice.
 - The translated json file won't be in the order of the source file. This is not a problem at all, but just so you know.
-## Available languages
-The updated list of available languages is available on [DeepL's API](https://www.deepl.com/docs-api/translating-text/request/) documentation that I encourage you to read.
-Available languages (both source & target):
+## Available Languages
 
-> Bulgarian,Czech,Danish,German,Greek,English,Spanish,Estonian,Finnish,French,Hungarian,Italian,
-> Japanese,Lithuanian,Latvian,Dutch,Polish,Portuguese,Romanian,Russian,Slovak,Slovenian,Swedish,Chinese
+### Source Languages
+BG, CS, DA, DE, EL, EN, ES, ET, FI, FR, HU, ID, IT, JA, KO, LT, LV, NB, NL, PL, PT, RO, RU, SK, SL, SV, TR, UK, ZH
 
-## Installation and usage
+### Target Languages
+All source languages can be used as target languages.
 
-### Install from sources
+For the most up-to-date list of available languages, please refer to [DeepL's API documentation](https://www.deepl.com/docs-api/translating-text/request/).
+
+## Installation and Usage
+
+### Install from Sources
 ```sh
 git clone https://github.com/gmonarque/go-json-translate
-cd go-json-translate && go mod install
+cd go-json-translate && go mod download && go build
 ```
-### Usage
-Before using go-json-translate, you need to configure the config.ini file.
 
-    DEEPL_API_ENDPOINT = https://api-free.deepl.com/v2/translate
-    DEEPL_API_KEY = <your_api_key>
-Then, you're good to.. start using this tool. (this joke has been used too many times now)
+### Configuration
+Before using go-json-translate, you need to configure the `config.ini` file:
+
+```ini
+DEEPL_API_ENDPOINT = https://api-free.deepl.com/v2/translate
+DEEPL_API_KEY = <your_api_key>
+```
+
+### Usage
 ```sh
-Usage example: main.go -source_file=file.json -source_lang=fr -target_lang=en
-List of languages available at github.com/gmonarque/go-json-translate
-  -source_file string
-        Path of the source .json file
+Usage: ./go-json-translate -source_path=<path> -output_path=<path> -source_lang=<lang> -target_lang=<lang> [-ignored_fields=<fields>]
+
+Options:
+  -source_path string
+        Path of the source .json file(s)
+  -output_path string
+        Path for the output file(s)
   -source_lang string
-        Current language of the file. Use "autodetect" to let deepL guess the language. (default "autodetect")
+        Current language of the file. Use "autodetect" to let DeepL guess the language. (default "autodetect")
   -target_lang string
-        Language the file will be translated in
+        Language the file will be translated to
+  -ignored_fields string
+        Ignored fields separated by semicolon (optional)
+
+Example:
+  ./go-json-translate -source_path=folder/*.json -output_path=output/*.json -source_lang=fr -target_lang=en
 ```
 ### Contribute & issues
 Don't hesitate to contribute to this project in any way you want. Just use gofmt and feel my vibe.
