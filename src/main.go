@@ -70,10 +70,16 @@ func main() {
 	bar := progressbar.NewOptions(len(files),
 		progressbar.OptionEnableColorCodes(true),
 		progressbar.OptionShowCount(),
-		progressbar.OptionSpinnerType(69),
-		progressbar.OptionSetWidth(15),
-		progressbar.OptionClearOnFinish(),
+		progressbar.OptionSpinnerType(14),
+		progressbar.OptionSetWidth(50),
 		progressbar.OptionSetDescription("[cyan]Translating files..."),
+		progressbar.OptionSetTheme(progressbar.Theme{
+			Saucer:        "[green]=[reset]",
+			SaucerHead:    "[green]>[reset]",
+			SaucerPadding: " ",
+			BarStart:      "[",
+			BarEnd:        "]",
+		}),
 	)
 
 	// Populate database if requested
@@ -126,10 +132,10 @@ func main() {
 		for {
 			select {
 			case state := <-config.State:
-				bar.Add(state.Counter)
+				_ = bar.Add(state.Counter)
 			case <-done:
+				_ = bar.Finish()
 				fmt.Printf("\nTranslation of file %s complete!\n", filename)
-				bar.Reset()
 				goto translationDone
 			}
 		}
