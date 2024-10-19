@@ -67,12 +67,12 @@ func main() {
 	}
 
 	// Progress bar
-	bar := progressbar.NewOptions(len(files),
+	bar := progressbar.NewOptions(-1,
 		progressbar.OptionEnableColorCodes(true),
 		progressbar.OptionShowCount(),
 		progressbar.OptionSpinnerType(14),
 		progressbar.OptionSetWidth(50),
-		progressbar.OptionSetDescription("[cyan]Translating files..."),
+		progressbar.OptionSetDescription("[cyan]Translating..."),
 		progressbar.OptionSetTheme(progressbar.Theme{
 			Saucer:        "[green]=[reset]",
 			SaucerHead:    "[green]>[reset]",
@@ -81,6 +81,9 @@ func main() {
 			BarEnd:        "]",
 		}),
 	)
+
+	// Create a channel to receive progress updates
+	progressChan := make(chan int)
 
 	// Populate database if requested
 	if *populateDB != "" {
@@ -109,7 +112,7 @@ func main() {
 			SourceFilePath: file,
 			APIEndpoint:    apiEndpoint,
 			APIKey:         apiKey,
-			State:          make(chan models.State),
+			ProgressChan:   progressChan,
 			DB:             db,
 		}
 
@@ -118,10 +121,6 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		// Count total number of items to translate
-		totalItems := countTranslatableItems(config.SourceData)
-		bar.ChangeMax(totalItems)
 
 		// Translating the source file
 		done := make(chan bool)
@@ -133,10 +132,11 @@ func main() {
 			done <- true
 		}()
 
+		// Update progress bar
 		for {
 			select {
-			case state := <-config.State:
-				_ = bar.Add(state.Counter)
+			case <-progressChan:
+				_ = bar.Add(1)
 			case <-done:
 				_ = bar.Finish()
 				fmt.Printf("\nTranslation of file %s complete!\n", filename)

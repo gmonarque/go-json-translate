@@ -23,6 +23,9 @@ var delimiters = [][]string{
 }
 
 func Translate(sourceText string, config models.Config) (models.Translation, error) {
+	defer func() {
+		config.ProgressChan <- 1
+	}()
 	translation := models.Translation{
 		SourceText:     sourceText,
 		SourceLang:     config.SourceLang,

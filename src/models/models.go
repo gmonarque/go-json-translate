@@ -47,6 +47,6 @@ type Config struct {
 	SourceFilePath string
 	APIEndpoint    string
 	APIKey         string
-	State          chan State
+	ProgressChan   chan int
 	DB             *gorm.DB
 }
