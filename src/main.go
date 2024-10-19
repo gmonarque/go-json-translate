@@ -119,6 +119,10 @@ func main() {
 			log.Fatal(err)
 		}
 
+		// Count total number of items to translate
+		totalItems := countTranslatableItems(config.SourceData)
+		bar.ChangeMax(totalItems)
+
 		// Translating the source file
 		done := make(chan bool)
 		go func() {
