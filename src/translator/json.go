@@ -71,6 +71,8 @@ func translateElement(elem interface{}, config models.Config) (interface{}, erro
 	switch v := elem.(type) {
 	case *orderedmap.OrderedMap:
 		return translateNestedJSON(v, config)
+	case orderedmap.OrderedMap:
+		return translateNestedJSON(&v, config)
 	case []interface{}:
 		return translateArray(v, config)
 	case string:
@@ -83,9 +85,16 @@ func translateElement(elem interface{}, config models.Config) (interface{}, erro
 }
 
 func translateNestedJSON(data *orderedmap.OrderedMap, config models.Config) (*orderedmap.OrderedMap, error) {
-	configNode := config
-	configNode.SourceData = data
-	return TranslateJSON(configNode)
+	translatedMap := orderedmap.New()
+	for _, key := range data.Keys() {
+		value, _ := data.Get(key)
+		translatedValue, err := translateElement(value, config)
+		if err != nil {
+			return nil, fmt.Errorf("error translating key %s: %v", key, err)
+		}
+		translatedMap.Set(key, translatedValue)
+	}
+	return translatedMap, nil
 }
 
 func translateArray(arr []interface{}, config models.Config) ([]interface{}, error) {
