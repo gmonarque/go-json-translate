@@ -3,6 +3,7 @@ module github.com/gmonarque/deepl-json
 go 1.17
 
 require (
+	github.com/iancoleman/orderedmap v0.2.0
 	github.com/schollz/progressbar/v3 v3.8.6
 	gorm.io/gorm v1.23.2
 )

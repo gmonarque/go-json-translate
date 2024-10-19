@@ -1,6 +1,9 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"github.com/iancoleman/orderedmap"
+	"gorm.io/gorm"
+)
 
 type Translation struct {
 	gorm.Model
@@ -36,8 +39,8 @@ type State struct {
 }
 
 type Config struct {
-	SourceData     map[string]interface{}
-	TranslatedFile map[string]interface{}
+	SourceData     *orderedmap.OrderedMap
+	TranslatedFile *orderedmap.OrderedMap
 	IgnoredFields  []string
 	SourceLang     string
 	TargetLang     string

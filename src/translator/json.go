@@ -9,9 +9,10 @@ import (
 	"reflect"
 
 	"github.com/gmonarque/deepl-json/models"
+	"github.com/iancoleman/orderedmap"
 )
 
-func ReadJSON(sourceFile string) (map[string]interface{}, error) {
+func ReadJSON(sourceFile string) (*orderedmap.OrderedMap, error) {
 	jsonFile, err := os.Open(sourceFile)
 	if err != nil {
 		return nil, err
@@ -23,7 +24,7 @@ func ReadJSON(sourceFile string) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	var result map[string]interface{}
+	result := orderedmap.New()
 	if err := json.Unmarshal(byteValue, &result); err != nil {
 		return nil, err
 	}
@@ -31,30 +32,30 @@ func ReadJSON(sourceFile string) (map[string]interface{}, error) {
 	return result, nil
 }
 
-func TranslateJSON(config models.Config) (map[string]interface{}, error) {
-	keys := reflect.ValueOf(config.SourceData).MapKeys()
+func TranslateJSON(config models.Config) (*orderedmap.OrderedMap, error) {
+	translatedFile := orderedmap.New()
+	keys := config.SourceData.Keys()
 
 	for _, key := range keys {
-		keyStr := key.Interface().(string)
+		elem, _ := config.SourceData.Get(key)
 
-		if isIgnored(keyStr, config.IgnoredFields) {
-			config.TranslatedFile[keyStr] = config.SourceData[keyStr]
+		if isIgnored(key, config.IgnoredFields) {
+			translatedFile.Set(key, elem)
 			continue
 		}
 
-		elem := config.SourceData[keyStr]
 		translatedElem, err := translateElement(elem, config)
 		if err != nil {
-			log.Printf("Error translating key %s: %v", keyStr, err)
-			config.TranslatedFile[keyStr] = elem
+			log.Printf("Error translating key %s: %v", key, err)
+			translatedFile.Set(key, elem)
 		} else {
-			config.TranslatedFile[keyStr] = translatedElem
+			translatedFile.Set(key, translatedElem)
 		}
 
 		config.State <- models.State{Counter: 1}
 	}
 
-	return config.TranslatedFile, nil
+	return translatedFile, nil
 }
 
 func isIgnored(key string, ignoredFields []string) bool {
@@ -68,7 +69,7 @@ func isIgnored(key string, ignoredFields []string) bool {
 
 func translateElement(elem interface{}, config models.Config) (interface{}, error) {
 	switch v := elem.(type) {
-	case map[string]interface{}:
+	case *orderedmap.OrderedMap:
 		return translateNestedJSON(v, config)
 	case []interface{}:
 		return translateArray(v, config)
@@ -81,10 +82,9 @@ func translateElement(elem interface{}, config models.Config) (interface{}, erro
 	}
 }
 
-func translateNestedJSON(data map[string]interface{}, config models.Config) (map[string]interface{}, error) {
+func translateNestedJSON(data *orderedmap.OrderedMap, config models.Config) (*orderedmap.OrderedMap, error) {
 	configNode := config
 	configNode.SourceData = data
-	configNode.TranslatedFile = make(map[string]interface{})
 	return TranslateJSON(configNode)
 }
 

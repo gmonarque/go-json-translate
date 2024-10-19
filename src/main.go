@@ -17,6 +17,7 @@ import (
 	"github.com/gmonarque/deepl-json/db"
 	"github.com/gmonarque/deepl-json/models"
 	"github.com/gmonarque/deepl-json/translator"
+	"github.com/iancoleman/orderedmap"
 	"github.com/schollz/progressbar/v3"
 )
 
@@ -80,8 +81,8 @@ func main() {
 		directory, filename := filepath.Split(file)
 
 		config := models.Config{
-			SourceData:     make(map[string]interface{}),
-			TranslatedFile: make(map[string]interface{}),
+			SourceData:     orderedmap.New(),
+			TranslatedFile: orderedmap.New(),
 			IgnoredFields:  strings.Split(*ignoredFields, ";"),
 			SourceLang:     *sourceLang,
 			TargetLang:     *targetLang,
