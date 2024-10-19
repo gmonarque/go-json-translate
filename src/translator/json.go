@@ -100,6 +100,46 @@ func translateArray(arr []interface{}, config models.Config) ([]interface{}, err
 	return translatedArr, nil
 }
 
+func PopulateDatabase(filePath string, config models.Config) error {
+	data, err := ReadJSON(filePath)
+	if err != nil {
+		return err
+	}
+
+	return populateDatabaseRecursive(data, config)
+}
+
+func populateDatabaseRecursive(data *orderedmap.OrderedMap, config models.Config) error {
+	for _, key := range data.Keys() {
+		value, _ := data.Get(key)
+		switch v := value.(type) {
+		case string:
+			translation := models.Translation{
+				SourceText:     v,
+				SourceLang:     config.SourceLang,
+				TargetLang:     config.TargetLang,
+				TranslatedText: v,
+			}
+			if err := config.DB.Create(&translation).Error; err != nil {
+				return err
+			}
+		case *orderedmap.OrderedMap:
+			if err := populateDatabaseRecursive(v, config); err != nil {
+				return err
+			}
+		case []interface{}:
+			for _, item := range v {
+				if nestedMap, ok := item.(*orderedmap.OrderedMap); ok {
+					if err := populateDatabaseRecursive(nestedMap, config); err != nil {
+						return err
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
 func translateString(text string, config models.Config) (string, error) {
 	res, err := Translate(text, config)
 	if err != nil {

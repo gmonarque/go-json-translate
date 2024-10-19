@@ -28,6 +28,7 @@ func main() {
 	sourcePath := flag.String("source_path", "", "Path of the source file(s)")
 	outputPath := flag.String("output_path", "", "Path for the output file(s)")
 	ignoredFields := flag.String("ignored_fields", "", "Ignored fields separated by semicolon")
+	populateDB := flag.String("populate_db", "", "Path to existing translation file to populate the database")
 	flag.Parse()
 
 	if *sourceLang == "" || *targetLang == "" || *sourcePath == "" || *outputPath == "" {
@@ -75,6 +76,20 @@ func main() {
 		progressbar.OptionClearOnFinish(),
 		progressbar.OptionSetDescription("[cyan]Translating files..."),
 	)
+
+	// Populate database if requested
+	if *populateDB != "" {
+		config := models.Config{
+			SourceLang: *sourceLang,
+			TargetLang: *targetLang,
+			DB:         db,
+		}
+		if err := translator.PopulateDatabase(*populateDB, config); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Database populated successfully.")
+		return
+	}
 
 	// Translating each JSON file in the source folder
 	for _, file := range files {

@@ -98,12 +98,31 @@ DEEPL_API_KEY = <your_api_key>
 - `-source_lang`: Current language of the file (use "autodetect" to let DeepL guess)
 - `-target_lang`: Language to translate the file into
 - `-ignored_fields`: (Optional) Fields to ignore, separated by semicolons
+- `-populate_db`: (Optional) Path to existing translation file to populate the database
 
-### Example
+### Examples
 
 ```sh
+# Translate files
 ./go-json-translate -source_path=folder/*.json -output_path=output/*.json -source_lang=fr -target_lang=en
+
+# Populate database with existing translations
+./go-json-translate -populate_db=existing_translations.json -source_lang=en -target_lang=cs
 ```
+
+## Populating the Database
+
+To use existing translations and only translate new strings, you can populate the database with your current translations:
+
+1. Run the tool with the `-populate_db` flag, specifying the path to your existing translation file:
+
+```sh
+./go-json-translate -populate_db=path/to/existing/cs.json -source_lang=en -target_lang=cs
+```
+
+2. Repeat this process for each language you have existing translations for.
+
+3. After populating the database, run the translation process as usual. The tool will use the existing translations from the database and only translate new strings using the DeepL API.
 
 ## Available Languages
 
