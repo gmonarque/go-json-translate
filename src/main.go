@@ -25,13 +25,13 @@ func main() {
 	sourceLang := flag.String("source_lang", "autodetect", "Current language of the file. Use \"autodetect\" to let DeepL guess the language.")
 	targetLang := flag.String("target_lang", "", "Language the file will be translated to")
 	sourcePath := flag.String("source_path", "", "Path of the source file(s)")
-	outputPath := flag.String("output_path", "", "Path for the output file(s)")
+	outputPath := flag.String("output_path", "", "Path for the output file(s). If not set, output will be in the same folder as the input")
 	ignoredFields := flag.String("ignored_fields", "", "Ignored fields separated by semicolon")
 	populateDB := flag.String("populate_db", "", "Path to existing translation file to populate the database")
 	flag.Parse()
 
-	if *sourceLang == "" || *targetLang == "" || *sourcePath == "" || *outputPath == "" {
-		fmt.Println("Usage example: go run main.go -source_path=folder/*.json -output_path=output/*.json -source_lang=fr -target_lang=en")
+	if *sourceLang == "" || *targetLang == "" || *sourcePath == "" {
+		fmt.Println("Usage example: go run main.go -source_path=folder/*.json -output_path=output/ -source_lang=fr -target_lang=en")
 		fmt.Println("Available source languages:")
 		fmt.Println("BG, CS, DA, DE, EL, EN, ES, ET, FI, FR, HU, ID, IT, JA, KO, LT, LV, NB, NL, PL, PT, RO, RU, SK, SL, SV, TR, UK, ZH")
 		fmt.Println("Available target languages:")
@@ -145,28 +145,29 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// Check if the output path is provided
+		// Determine the output directory
+		var outputDir string
 		if *outputPath == "" {
-			log.Fatal("Output path is required. Please provide it using the -output_path flag.")
-		}
+			outputDir = filepath.Dir(*sourcePath)
+		} else {
+			outputDir = *outputPath
+			if !filepath.IsAbs(outputDir) {
+				outputDir = filepath.Join(filepath.Dir(*sourcePath), outputDir)
+			}
 
-		// Check if the output directory exists
-		outputDir := *outputPath
-		if !filepath.IsAbs(outputDir) {
-			outputDir = filepath.Join(filepath.Dir(*sourcePath), outputDir)
-		}
-
-		if _, err := os.Stat(outputDir); os.IsNotExist(err) {
-			fmt.Printf("Output directory %s does not exist. Do you want to create it? (y/n): ", outputDir)
-			var response string
-			fmt.Scanln(&response)
-			if strings.ToLower(response) == "y" {
-				if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
-					log.Fatalf("Failed to create output directory: %v", err)
+			// Check if the output directory exists
+			if _, err := os.Stat(outputDir); os.IsNotExist(err) {
+				fmt.Printf("Output directory %s does not exist. Do you want to create it? (y/n): ", outputDir)
+				var response string
+				fmt.Scanln(&response)
+				if strings.ToLower(response) == "y" {
+					if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
+						log.Fatalf("Failed to create output directory: %v", err)
+					}
+					fmt.Printf("Created output directory: %s\n", outputDir)
+				} else {
+					log.Fatal("Output directory does not exist. Exiting.")
 				}
-				fmt.Printf("Created output directory: %s\n", outputDir)
-			} else {
-				log.Fatal("Output directory does not exist. Exiting.")
 			}
 		}
 
