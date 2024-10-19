@@ -3,26 +3,27 @@ package models
 import "gorm.io/gorm"
 
 type Translation struct {
-	Source_text     string `gorm:"string"`
-	Source_lang     string `gorm:"string"`
-	Target_lang     string `gorm:"string"`
-	Translated_text string `gorm:"string"`
+	gorm.Model
+	SourceText     string `gorm:"type:text;index:idx_source_target,priority:1"`
+	SourceLang     string `gorm:"type:varchar(10)"`
+	TargetLang     string `gorm:"type:varchar(10);index:idx_source_target,priority:2"`
+	TranslatedText string `gorm:"type:text"`
 }
 
 type TranslationRequest struct {
-	Auth_key            string `json:"auth_key"`              //required
-	Text                string `json:"text"`                  //required
-	Source_lang         string `json:"source_lang,omitempty"` //optional
-	Target_lang         string `json:"target_lang"`           //required
-	Split_sentences     string `json:"split_sentences"`       //optional
-	Preserve_formatting string `json:"preserve_formatting"`   //optional
-	Formality           string `json:"formality"`             //optional
-	Glossary_id         string `json:"glossary_id"`           //optional
+	AuthKey            string `json:"auth_key"`
+	Text               string `json:"text"`
+	SourceLang         string `json:"source_lang,omitempty"`
+	TargetLang         string `json:"target_lang"`
+	SplitSentences     string `json:"split_sentences,omitempty"`
+	PreserveFormatting string `json:"preserve_formatting,omitempty"`
+	Formality          string `json:"formality,omitempty"`
+	GlossaryID         string `json:"glossary_id,omitempty"`
 }
 
 type TranslationResponse struct {
-	Detected_source_language string `json:"detected_source_language"`
-	Text                     string `json:"text"`
+	DetectedSourceLanguage string `json:"detected_source_language"`
+	Text                   string `json:"text"`
 }
 
 type Response struct {
@@ -34,14 +35,14 @@ type State struct {
 }
 
 type Config struct {
-	Source_data      map[string]interface{}
-	Translated_file  map[string]interface{}
-	Ignored_fields   []string
-	Source_lang      string
-	Target_lang      string
-	Source_file_path string
-	Api_endpoint     string
-	Api_key          string
-	State            chan State
-	DB               *gorm.DB
+	SourceData     map[string]interface{}
+	TranslatedFile map[string]interface{}
+	IgnoredFields  []string
+	SourceLang     string
+	TargetLang     string
+	SourceFilePath string
+	APIEndpoint    string
+	APIKey         string
+	State          chan State
+	DB             *gorm.DB
 }
