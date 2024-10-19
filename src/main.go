@@ -182,7 +182,7 @@ func main() {
 		}
 
 		// Generate the output file path
-		outputFilename := strings.TrimSuffix(filename, filepath.Ext(filename)) + "_translated" + filepath.Ext(filename)
+		outputFilename := strings.TrimSuffix(filename, filepath.Ext(filename)) + "_translated_" + *targetLang + filepath.Ext(filename)
 		outputFilePath := filepath.Join(outputDir, outputFilename)
 
 		// Saving the translated JSON file to the output location
@@ -192,17 +192,4 @@ func main() {
 
 		fmt.Printf("Translated file is at: %s\n", outputFilePath)
 	}
-}
-func countTranslatableItems(data *orderedmap.OrderedMap) int {
-	count := 0
-	for _, key := range data.Keys() {
-		value, _ := data.Get(key)
-		switch v := value.(type) {
-		case string:
-			count++
-		case *orderedmap.OrderedMap:
-			count += countTranslatableItems(v)
-		}
-	}
-	return count
 }
