@@ -25,11 +25,12 @@ func main() {
 	sourceLang := flag.String("source_lang", "autodetect", "Current language of the file. Use \"autodetect\" to let DeepL guess the language.")
 	targetLang := flag.String("target_lang", "", "Language the file will be translated to")
 	sourcePath := flag.String("source_path", "", "Path of the source file(s)")
+	outputPath := flag.String("output_path", "", "Path for the output file(s)")
 	ignoredFields := flag.String("ignored_fields", "", "Ignored fields separated by semicolon")
 	flag.Parse()
 
-	if *sourceLang == "" || *targetLang == "" || *sourcePath == "" {
-		fmt.Println("Usage example: go run main.go -source_path=folder/*.json -source_lang=fr -target_lang=en")
+	if *sourceLang == "" || *targetLang == "" || *sourcePath == "" || *outputPath == "" {
+		fmt.Println("Usage example: go run main.go -source_path=folder/*.json -output_path=output/*.json -source_lang=fr -target_lang=en")
 		fmt.Println("List of languages available at github.com/gmonarque/go-json-translate")
 		flag.PrintDefaults()
 		os.Exit(1)
@@ -124,12 +125,21 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// Saving the translated JSON file to the same location as the source file
-		translatedFilePath := filepath.Join(directory, filename)
-		if err := os.WriteFile(translatedFilePath, buf.Bytes(), 0644); err != nil {
+		// Create the output directory if it doesn't exist
+		outputDir := filepath.Dir(*outputPath)
+		if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
 			log.Fatal(err)
 		}
 
-		fmt.Printf("Translated file is at: %s\n", translatedFilePath)
+		// Generate the output file path
+		outputFilename := strings.TrimSuffix(filename, filepath.Ext(filename)) + "_translated" + filepath.Ext(filename)
+		outputFilePath := filepath.Join(outputDir, outputFilename)
+
+		// Saving the translated JSON file to the output location
+		if err := os.WriteFile(outputFilePath, buf.Bytes(), 0644); err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("Translated file is at: %s\n", outputFilePath)
 	}
 }
