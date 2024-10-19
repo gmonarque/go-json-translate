@@ -189,3 +189,16 @@ func main() {
 		fmt.Printf("Translated file is at: %s\n", outputFilePath)
 	}
 }
+func countTranslatableItems(data *orderedmap.OrderedMap) int {
+	count := 0
+	for _, key := range data.Keys() {
+		value, _ := data.Get(key)
+		switch v := value.(type) {
+		case string:
+			count++
+		case *orderedmap.OrderedMap:
+			count += countTranslatableItems(v)
+		}
+	}
+	return count
+}
