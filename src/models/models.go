@@ -49,4 +49,5 @@ type Config struct {
 	APIKey         string
 	ProgressChan   chan int
 	DB             *gorm.DB
+	State          chan State
 }

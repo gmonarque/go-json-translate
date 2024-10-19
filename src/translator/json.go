@@ -52,7 +52,7 @@ func TranslateJSON(config models.Config) (*orderedmap.OrderedMap, error) {
 			translatedFile.Set(key, translatedElem)
 		}
 
-		config.State <- models.State{Counter: 1}
+		config.ProgressChan <- 1
 	}
 
 	return translatedFile, nil
