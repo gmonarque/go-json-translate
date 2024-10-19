@@ -145,15 +145,25 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// Create the output directory if it doesn't exist
+		// Check if the output directory exists
 		outputDir := filepath.Dir(*outputPath)
-		if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
-			log.Fatal(err)
+		if _, err := os.Stat(outputDir); os.IsNotExist(err) {
+			fmt.Printf("Output directory %s does not exist. Do you want to create it? (y/n): ", outputDir)
+			var response string
+			fmt.Scanln(&response)
+			if strings.ToLower(response) == "y" {
+				if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
+					log.Fatalf("Failed to create output directory: %v", err)
+				}
+				fmt.Printf("Created output directory: %s\n", outputDir)
+			} else {
+				log.Fatal("Output directory does not exist. Exiting.")
+			}
 		}
 
 		// Generate the output file path
 		outputFilename := strings.TrimSuffix(filename, filepath.Ext(filename)) + "_translated" + filepath.Ext(filename)
-		outputFilePath := filepath.Join(outputDir, outputFilename)
+		outputFilePath := filepath.Join(*outputPath, outputFilename)
 
 		// Saving the translated JSON file to the output location
 		if err := os.WriteFile(outputFilePath, buf.Bytes(), 0644); err != nil {
