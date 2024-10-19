@@ -145,8 +145,17 @@ func main() {
 			log.Fatal(err)
 		}
 
+		// Check if the output path is provided
+		if *outputPath == "" {
+			log.Fatal("Output path is required. Please provide it using the -output_path flag.")
+		}
+
 		// Check if the output directory exists
-		outputDir := filepath.Dir(*outputPath)
+		outputDir := *outputPath
+		if !filepath.IsAbs(outputDir) {
+			outputDir = filepath.Join(filepath.Dir(*sourcePath), outputDir)
+		}
+
 		if _, err := os.Stat(outputDir); os.IsNotExist(err) {
 			fmt.Printf("Output directory %s does not exist. Do you want to create it? (y/n): ", outputDir)
 			var response string
@@ -163,7 +172,7 @@ func main() {
 
 		// Generate the output file path
 		outputFilename := strings.TrimSuffix(filename, filepath.Ext(filename)) + "_translated" + filepath.Ext(filename)
-		outputFilePath := filepath.Join(*outputPath, outputFilename)
+		outputFilePath := filepath.Join(outputDir, outputFilename)
 
 		// Saving the translated JSON file to the output location
 		if err := os.WriteFile(outputFilePath, buf.Bytes(), 0644); err != nil {
