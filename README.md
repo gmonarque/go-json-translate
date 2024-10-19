@@ -103,7 +103,9 @@ Ok, so 500,000 / 6.5 = 76923. We could estimate that we can translate 70k words 
 BG, CS, DA, DE, EL, EN, ES, ET, FI, FR, HU, ID, IT, JA, KO, LT, LV, NB, NL, PL, PT, RO, RU, SK, SL, SV, TR, UK, ZH
 
 ### Target Languages
-All source languages can be used as target languages.
+AR, BG, CS, DA, DE, EL, EN-GB, EN-US, ES, ET, FI, FR, HU, ID, IT, JA, KO, LT, LV, NB, NL, PL, PT-BR, PT-PT, RO, RU, SK, SL, SV, TR, UK, ZH, ZH-HANS, ZH-HANT
+
+Note: Not all source languages can be used as target languages. The target languages list includes some specific variants (e.g., EN-GB, EN-US, PT-BR, PT-PT, ZH-HANS, ZH-HANT) that are not available as source languages.
 
 For the most up-to-date list of available languages, please refer to [DeepL's API documentation](https://www.deepl.com/docs-api/translating-text/request/).
 
