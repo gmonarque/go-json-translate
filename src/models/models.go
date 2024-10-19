@@ -11,14 +11,15 @@ type Translation struct {
 }
 
 type TranslationRequest struct {
-	AuthKey            string `json:"auth_key"`
-	Text               string `json:"text"`
-	SourceLang         string `json:"source_lang,omitempty"`
-	TargetLang         string `json:"target_lang"`
-	SplitSentences     string `json:"split_sentences,omitempty"`
-	PreserveFormatting string `json:"preserve_formatting,omitempty"`
-	Formality          string `json:"formality,omitempty"`
-	GlossaryID         string `json:"glossary_id,omitempty"`
+	Text               []string `json:"text"`
+	SourceLang         string   `json:"source_lang,omitempty"`
+	TargetLang         string   `json:"target_lang"`
+	SplitSentences     string   `json:"split_sentences,omitempty"`
+	PreserveFormatting bool     `json:"preserve_formatting,omitempty"`
+	Formality          string   `json:"formality,omitempty"`
+	GlossaryId         string   `json:"glossary_id,omitempty"`
+	TagHandling        string   `json:"tag_handling,omitempty"`
+	OutlineDetection   bool     `json:"outline_detection,omitempty"`
 }
 
 type TranslationResponse struct {

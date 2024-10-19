@@ -1,15 +1,17 @@
 package translator
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"regexp"
 	"strings"
 
 	"github.com/gmonarque/deepl-json/models"
-	"github.com/google/go-querystring/query"
 )
 
 var delimiters = [][]string{
@@ -40,8 +42,7 @@ func Translate(sourceText string, config models.Config) (models.Translation, err
 	variablesPre := extractVariables(sourceText)
 
 	request := models.TranslationRequest{
-		AuthKey:    config.APIKey,
-		Text:       sourceText,
+		Text:       []string{sourceText},
 		TargetLang: config.TargetLang,
 	}
 
@@ -49,23 +50,37 @@ func Translate(sourceText string, config models.Config) (models.Translation, err
 		request.SourceLang = config.SourceLang
 	}
 
-	query, err := query.Values(request)
+	jsonData, err := json.Marshal(request)
 	if err != nil {
 		return translation, err
 	}
 
-	resp, err := http.PostForm(config.APIEndpoint, query)
+	req, err := http.NewRequest("POST", config.APIEndpoint, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return translation, err
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("DeepL-Auth-Key %s", config.APIKey))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		return translation, err
 	}
 	defer resp.Body.Close()
 
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return translation, err
+	}
+
 	if resp.StatusCode != http.StatusOK {
-		return translation, errors.New(resp.Status)
+		return translation, fmt.Errorf("API request failed with status code %d: %s", resp.StatusCode, string(body))
 	}
 
 	var res models.Response
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.Unmarshal(body, &res); err != nil {
 		return translation, err
 	}
 
