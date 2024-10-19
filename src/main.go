@@ -31,7 +31,10 @@ func main() {
 
 	if *sourceLang == "" || *targetLang == "" || *sourcePath == "" || *outputPath == "" {
 		fmt.Println("Usage example: go run main.go -source_path=folder/*.json -output_path=output/*.json -source_lang=fr -target_lang=en")
-		fmt.Println("List of languages available at github.com/gmonarque/go-json-translate")
+		fmt.Println("Available source languages:")
+		fmt.Println("BG, CS, DA, DE, EL, EN, ES, ET, FI, FR, HU, ID, IT, JA, KO, LT, LV, NB, NL, PL, PT, RO, RU, SK, SL, SV, TR, UK, ZH")
+		fmt.Println("All source languages can be used as target languages.")
+		fmt.Println("For more information, visit: github.com/gmonarque/go-json-translate")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
