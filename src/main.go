@@ -12,11 +12,10 @@ import (
 	"strings"
 
 	"gopkg.in/ini.v1"
-	"gorm.io/gorm"
 
-	"github.com/gmonarque/deepl-json/db"
-	"github.com/gmonarque/deepl-json/models"
-	"github.com/gmonarque/deepl-json/translator"
+	"github.com/gmonarque/go-json-translate/db"
+	"github.com/gmonarque/go-json-translate/models"
+	"github.com/gmonarque/go-json-translate/translator"
 	"github.com/iancoleman/orderedmap"
 	"github.com/schollz/progressbar/v3"
 )
@@ -93,7 +92,7 @@ func main() {
 
 	// Translating each JSON file in the source folder
 	for _, file := range files {
-		directory, filename := filepath.Split(file)
+		_, filename := filepath.Split(file)
 
 		config := models.Config{
 			SourceData:     orderedmap.New(),

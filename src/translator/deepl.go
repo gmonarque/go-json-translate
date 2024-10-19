@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gmonarque/deepl-json/models"
+	"github.com/gmonarque/go-json-translate/models"
 )
 
 var delimiters = [][]string{

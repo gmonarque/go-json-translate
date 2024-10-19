@@ -93,8 +93,8 @@ DEEPL_API_KEY = <your_api_key>
 
 ### Options
 
-- `-source_path`: Path of the source JSON file(s)
-- `-output_path`: Path for the output file(s)
+- `-source_path`: Path of the source JSON file(s), can be a folder or a single file
+- `-output_path`: Path for the output file(s). The output JSON files will have the same name as the source files, but with the appendix `_translated` added. This is optionnal.
 - `-source_lang`: Current language of the file (use "autodetect" to let DeepL guess)
 - `-target_lang`: Language to translate the file into
 - `-ignored_fields`: (Optional) Fields to ignore, separated by semicolons

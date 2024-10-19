@@ -2,3 +2,4 @@
 .vscode
 */**/translator.db
 */**/config.ini
+.aider*

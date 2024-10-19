@@ -1,4 +1,4 @@
-module github.com/gmonarque/deepl-json
+module github.com/gmonarque/go-json-translate
 
 go 1.17
 
@@ -9,7 +9,6 @@ require (
 )
 
 require (
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mattn/go-sqlite3 v1.14.12 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
@@ -21,7 +20,6 @@ require (
 )
 
 require (
-	github.com/google/go-querystring v1.1.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	gopkg.in/ini.v1 v1.66.4

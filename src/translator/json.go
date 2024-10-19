@@ -8,7 +8,7 @@ import (
 	"os"
 	"reflect"
 
-	"github.com/gmonarque/deepl-json/models"
+	"github.com/gmonarque/go-json-translate/models"
 	"github.com/iancoleman/orderedmap"
 )
 
