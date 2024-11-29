@@ -71,7 +71,7 @@ French (Translated):
 
 ```sh
 git clone https://github.com/gmonarque/go-json-translate
-cd go-json-translate
+cd go-json-translate/src
 go mod download
 go build
 ```
